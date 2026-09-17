@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 const session = require('express-session');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 const { router: authRouter, requireAuth } = require('./auth');
@@ -32,11 +33,14 @@ app.use('/plans', requireAuth, require('./routes/plans'));
 app.use('/renewals', requireAuth, require('./routes/renewals'));
 app.use('/reports', requireAuth, require('./routes/reports'));
 
-// Serve React build (production)
-app.use(express.static(path.join(__dirname, '../client/dist')));
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
-});
+// Serve the React build only when it is included in this deployment.
+const clientDist = path.join(__dirname, '../Client/dist');
+if (fs.existsSync(path.join(clientDist, 'index.html'))) {
+  app.use(express.static(clientDist));
+  app.get('*', (req, res) => res.sendFile(path.join(clientDist, 'index.html')));
+} else {
+  app.get('*', (req, res) => res.status(404).json({ error: 'Route not found.' }));
+}
 
 // Start server
 const port = process.env.PORT || 5000;
