@@ -3,9 +3,13 @@
   "version": "1.0.0",
   "description": "Express + SQLite backend for GYMONE React project",
   "main": "server.js",
+  "engines": {
+    "node": "20.19.5"
+  },
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "render-build": "npm install --build-from-source"
   },
   "dependencies": {
     "cors": "^2.8.5",
