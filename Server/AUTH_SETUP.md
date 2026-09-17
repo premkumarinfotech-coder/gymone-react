@@ -1,4 +1,13 @@
-# Google OAuth setup
+# Google OAuth and database setup
+
+## Render PostgreSQL
+
+1. In the Render dashboard, create a PostgreSQL database in the same region as `gymone-api`.
+2. Open the database's **Connect** panel and copy its **Internal Database URL**.
+3. Add that URL to the `gymone-api` web service as `DATABASE_URL`.
+4. Deploy the service. The backend creates the required tables automatically when it starts.
+
+Use the internal URL for a Render web service. Do not commit the URL to GitHub.
 
 1. Create or select a project in [Google Cloud Console](https://console.cloud.google.com/).
 2. Configure the OAuth consent screen and add the Google accounts that may test the app.
@@ -27,6 +36,7 @@ If this variable is missing, the frontend intentionally falls back to `http://lo
 Set these variables in the backend hosting project:
 
 ```text
+DATABASE_URL=your-render-postgresql-internal-database-url
 CLIENT_URL=https://gymone-react.vercel.app
 GOOGLE_REDIRECT_URI=https://your-api-domain.example.com/auth/google/callback
 GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com

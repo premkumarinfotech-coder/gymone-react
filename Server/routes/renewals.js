@@ -3,25 +3,31 @@ const router = express.Router();
 const db = require('../db');
 
 // Renew membership
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const { MemberID, NextRenewalDate } = req.body;
-  db.run(
-    `UPDATE PaymentDetails SET NextRenewalDate=? WHERE MemberID=?`,
-    [NextRenewalDate, MemberID],
-    function (err) {
-      if (err) return res.status(500).send(err);
-      res.json({ renewed: this.changes });
-    }
-  );
+  try {
+    const result = await db.query(
+      `UPDATE "PaymentDetails" SET "NextRenewalDate" = $1 WHERE "MemberID" = $2`,
+      [NextRenewalDate, MemberID]
+    );
+    res.json({ renewed: result.rowCount });
+  } catch (error) {
+    res.status(500).send(error);
+  }
 });
 
 // Search renewals
-router.get('/search', (req, res) => {
+router.get('/search', async (req, res) => {
   const { MemberID } = req.query;
-  db.all(`SELECT * FROM PaymentDetails WHERE MemberID=?`, [MemberID], (err, rows) => {
-    if (err) return res.status(500).send(err);
-    res.json(rows);
-  });
+  try {
+    const result = await db.query(
+      `SELECT * FROM "PaymentDetails" WHERE "MemberID" = $1`,
+      [MemberID]
+    );
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).send(error);
+  }
 });
 
 module.exports = router;

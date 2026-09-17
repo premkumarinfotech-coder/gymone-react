@@ -1,19 +1,20 @@
 import { useState, useEffect } from 'react';
 import { Form, Button, Table } from 'react-bootstrap';
+import { API_URL } from '../api';
 
 export default function RegisterMember() {
   const [members, setMembers] = useState([]);
   const [form, setForm] = useState({ MemberNo: '', MemberFName: '', MemberLName: '', EmailID: '' });
 
   useEffect(() => {
-    fetch('http://localhost:5000/members', { credentials: 'include' })
+    fetch(`${API_URL}/members`, { credentials: 'include' })
       .then(res => res.json())
       .then(data => setMembers(data));
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await fetch('http://localhost:5000/members', {
+    await fetch(`${API_URL}/members`, {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },

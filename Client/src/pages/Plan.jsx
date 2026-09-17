@@ -1,18 +1,19 @@
 import { useState, useEffect } from 'react';
+import { API_URL } from '../api';
 
 export default function Plan() {
   const [plans, setPlans] = useState([]);
   const [form, setForm] = useState({ PlanName: '', PlanAmount: '', SchemeID: '' });
 
   useEffect(() => {
-    fetch('http://localhost:5000/plans')
+    fetch(`${API_URL}/plans`)
       .then(res => res.json())
       .then(data => setPlans(data));
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await fetch('http://localhost:5000/plans', {
+    await fetch(`${API_URL}/plans`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(form),

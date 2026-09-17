@@ -5,8 +5,7 @@ import Payment from './Payment';
 import Renewals from './Renewals';
 import Reports from './Reports';
 import Login from './Login';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import { API_URL } from '../api';
 
 const navItems = [
   { path: '/', label: 'Overview', icon: '⌂' },

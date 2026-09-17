@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react';
+import { API_URL } from '../api';
 
 export default function Reports() {
   const [monthly, setMonthly] = useState([]);
   const [yearly, setYearly] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:5000/reports/monthly', { credentials: 'include' })
+    fetch(`${API_URL}/reports/monthly`, { credentials: 'include' })
       .then(res => res.json())
       .then(data => setMonthly(data));
 
-    fetch('http://localhost:5000/reports/yearly', { credentials: 'include' })
+    fetch(`${API_URL}/reports/yearly`, { credentials: 'include' })
       .then(res => res.json())
       .then(data => setYearly(data));
   }, []);

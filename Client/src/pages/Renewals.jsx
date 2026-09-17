@@ -1,11 +1,12 @@
 import { useState } from 'react';
+import { API_URL } from '../api';
 
 export default function Renewal() {
   const [form, setForm] = useState({ MemberID: '', NextRenewalDate: '' });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await fetch('http://localhost:5000/renewals', {
+    await fetch(`${API_URL}/renewals`, {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },

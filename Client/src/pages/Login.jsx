@@ -1,6 +1,5 @@
 import { useSearchParams } from 'react-router-dom';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import { API_URL } from '../api';
 
 const errorMessages = {
   oauth_not_configured: 'Google sign-in is not configured on the server yet.',

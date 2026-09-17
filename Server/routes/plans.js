@@ -3,24 +3,28 @@ const router = express.Router();
 const db = require('../db');
 
 // Add new plan
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const { PlanName, PlanAmount, SchemeID } = req.body;
-  db.run(
-    `INSERT INTO PlanMaster (PlanName, PlanAmount, SchemeID) VALUES (?, ?, ?)`,
-    [PlanName, PlanAmount, SchemeID],
-    function (err) {
-      if (err) return res.status(500).send(err);
-      res.json({ id: this.lastID });
-    }
-  );
+  try {
+    const result = await db.query(
+      `INSERT INTO "PlanMaster" ("PlanName", "PlanAmount", "SchemeID")
+       VALUES ($1, $2, $3) RETURNING "PlanID"`,
+      [PlanName, PlanAmount, SchemeID]
+    );
+    res.json({ id: result.rows[0].PlanID });
+  } catch (error) {
+    res.status(500).send(error);
+  }
 });
 
 // List all plans
-router.get('/', (req, res) => {
-  db.all(`SELECT * FROM PlanMaster`, [], (err, rows) => {
-    if (err) return res.status(500).send(err);
-    res.json(rows);
-  });
+router.get('/', async (req, res) => {
+  try {
+    const result = await db.query(`SELECT * FROM "PlanMaster"`);
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).send(error);
+  }
 });
 
 module.exports = router;

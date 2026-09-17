@@ -1,18 +1,19 @@
 import { useState, useEffect } from 'react';
+import { API_URL } from '../api';
 
 export default function Payment() {
   const [payments, setPayments] = useState([]);
   const [form, setForm] = useState({ MemberID: '', PlanID: '', PaymentAmount: '' });
 
   useEffect(() => {
-    fetch('http://localhost:5000/payments', { credentials: 'include' })
+    fetch(`${API_URL}/payments`, { credentials: 'include' })
       .then(res => res.json())
       .then(data => setPayments(data));
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await fetch('http://localhost:5000/payments', {
+    await fetch(`${API_URL}/payments`, {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },

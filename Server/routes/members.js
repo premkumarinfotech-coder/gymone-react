@@ -2,23 +2,27 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const { MemberNo, MemberFName, MemberLName, EmailID } = req.body;
-  db.run(
-    `INSERT INTO MemberRegistration (MemberNo, MemberFName, MemberLName, EmailID) VALUES (?, ?, ?, ?)`,
-    [MemberNo, MemberFName, MemberLName, EmailID],
-    function (err) {
-      if (err) return res.status(500).send(err);
-      res.json({ id: this.lastID });
-    }
-  );
+  try {
+    const result = await db.query(
+      `INSERT INTO "MemberRegistration" ("MemberNo", "MemberFName", "MemberLName", "EmailID")
+       VALUES ($1, $2, $3, $4) RETURNING "MemID"`,
+      [MemberNo, MemberFName, MemberLName, EmailID]
+    );
+    res.json({ id: result.rows[0].MemID });
+  } catch (error) {
+    res.status(500).send(error);
+  }
 });
 
-router.get('/', (req, res) => {
-  db.all(`SELECT * FROM MemberRegistration`, [], (err, rows) => {
-    if (err) return res.status(500).send(err);
-    res.json(rows);
-  });
+router.get('/', async (req, res) => {
+  try {
+    const result = await db.query(`SELECT * FROM "MemberRegistration"`);
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).send(error);
+  }
 });
 
 module.exports = router;
